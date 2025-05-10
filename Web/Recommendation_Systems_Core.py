@@ -3,6 +3,7 @@ import numpy as np
 import yaml
 import requests
 import time
+import os
 from sklearn.metrics.pairwise import cosine_distances, euclidean_distances, manhattan_distances
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import mean_squared_error
@@ -46,16 +47,18 @@ def manhattan_distances_metric(user_profile, anime_vector_df):
 
 """ Client Id"""
 def load_client_id(config_path = '../Credentials.yml'):
-    with open(config_path,'r') as file:
-        config = yaml.safe_load(file)
-    return config['api']['client_id']
+    if os.path.exist(config_path):
+        with open(config_path,'r') as file:
+            config = yaml.safe_load(file)
+        return config['api']['client_id']
+    else:
+        return os.getenv('CLIENT_ID')
 
-client_id = load_client_id()
 
 
 """ Adding new user's list from MyAnimeList to User Rating"""
 
-CLIENT_ID = client_id  # ID to authenticate requests to the API
+CLIENT_ID = load_client_id()  # ID to authenticate requests to the API
 
 MY_ANIME_LIST_API_URL = 'https://api.myanimelist.net/v2'  # The API endpoint that will be accessed.
 API_REQUEST_DELAY = 1  # Delay to prevent over-use of the API

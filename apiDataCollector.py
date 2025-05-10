@@ -8,15 +8,19 @@ import requests
 import json
 import time
 import yaml
+import os
 
 # Client id
-def load_client_id(config_path = 'Credentials.yml'):
-    with open(config_path,'r') as file:
-        config = yaml.safe_load(file)
-    return config['api']['client_id']
+def load_client_id(config_path = '../Credentials.yml'):
+    if os.path.exist(config_path):
+        with open(config_path,'r') as file:
+            config = yaml.safe_load(file)
+        return config['api']['client_id']
+    else:
+        return os.getenv('CLIENT_ID')
 
 
-CLIENT_ID =  load_client_id()  # ID to authenticate request sts to the API
+CLIENT_ID = load_client_id()  # ID to authenticate request sts to the API
 print(f'Client ID: {CLIENT_ID}')
 
 MY_ANIME_LIST_API_URL = 'https://api.myanimelist.net/v2' # The API endpoint that will be accessed.

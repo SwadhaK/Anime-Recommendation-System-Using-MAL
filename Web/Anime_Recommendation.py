@@ -2,12 +2,16 @@ import pickle
 import streamlit as st
 import pandas as pd
 import yaml
+import os
 
 # Load client ID from config
-def load_client_id(config_path='../Credentials.yml'):
-    with open(config_path, 'r') as file:
-        config = yaml.safe_load(file)
-    return config['api']['client_id']
+def load_client_id(config_path = '../Credentials.yml'):
+    if os.path.exist(config_path):
+        with open(config_path,'r') as file:
+            config = yaml.safe_load(file)
+        return config['api']['client_id']
+    else:
+        return os.getenv('CLIENT_ID')
 
 
 client_id = load_client_id()
