@@ -9,8 +9,8 @@ from sklearn.metrics.pairwise import cosine_distances, euclidean_distances, manh
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import mean_squared_error
 
-from surprise import BaselineOnly, Dataset, Reader, accuracy, SVD, SVDpp, NMF
-from surprise.model_selection import GridSearchCV, train_test_split
+# from surprise import BaselineOnly, Dataset, Reader, accuracy, SVD, SVDpp, NMF
+# from surprise.model_selection import GridSearchCV, train_test_split
 
 os.makedirs("Data", exist_ok=True)
 
