@@ -29,9 +29,9 @@ def load_recommender(file_path):
         return pickle.load(f)
 
 recommenders = {
-    "Content-Based Filtering Recommender": load_recommender('../data/cbf_recommender'),
-    "Collaborative Filtering Recommender": load_recommender('../data/collaborative_recommender'),
-    "Hybrid Recommender": load_recommender('../data/hybrid_recommender')
+    "Content-Based Filtering Recommender": load_recommender('./Data/cbf_recommender'),
+    "Collaborative Filtering Recommender": load_recommender('./Data/collaborative_recommender'),
+    "Hybrid Recommender": load_recommender('./Data/hybrid_recommender')
 }
 
 # UI container
