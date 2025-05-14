@@ -3,7 +3,14 @@ __pycache__/
 venv/ 
 Credentials.yml 
 Valid_Json_Creation.py
-data/
 .ipynb_checkpoints
 .idea/
+data/*
+!data/new_cbf_evaluation
+!data/new_cf_evaluation
+!data/new_hybrid_evaluation
+!data/hybrid_evaluation
+!data/cf_evaluation
+!data/cbf_evaluation
+Web/Data
 

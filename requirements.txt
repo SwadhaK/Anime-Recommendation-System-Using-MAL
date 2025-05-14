@@ -105,7 +105,7 @@ rfc3986-validator==0.1.1
 rich==13.7.1
 rpds-py==0.18.0
 scikit-learn==1.4.2
-scikit-surprise @ file:///D:/bld/scikit-surprise_1716198946292/work
+scikit-surprise
 scipy==1.13.0
 Send2Trash==1.8.3
 setuptools==75.8.2

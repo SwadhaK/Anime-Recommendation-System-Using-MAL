@@ -4,6 +4,7 @@ import yaml
 import requests
 import time
 import os
+import gdown
 from sklearn.metrics.pairwise import cosine_distances, euclidean_distances, manhattan_distances
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import mean_squared_error
@@ -11,13 +12,33 @@ from sklearn.metrics import mean_squared_error
 from surprise import BaselineOnly, Dataset, Reader, accuracy, SVD, SVDpp, NMF
 from surprise.model_selection import GridSearchCV, train_test_split
 
+os.makedirs("Data", exist_ok=True)
+
+# Replace these with actual file IDs from Drive
+file_map = {
+    "anime.csv": "1Qr2MnAJGZoy3LTrYhnh0qA9_B2DQtv-0",
+    "user_ratings_train.csv": "11VX_8qR0RZTPXPywYq2naG7sXLQtN_v0",
+    "user_ratings_test.csv": "1yT9-VW-wFrKnwErEckQSomPWjN3Y1E99",
+    "new_user_ratings_train.csv": "1R-YA3_BiOmtcTnxDzDKpDQZGRg37zJQY",
+    "new_user_ratings_test.csv": "1hBRwHnOvwyP-vY79vz7d5gylIuMXnXRb"
+}
+
+for filename, file_id in file_map.items():
+    output_path = os.path.join("Data", filename)
+    if not os.path.exists(output_path):
+        url = f"https://drive.google.com/uc?id={file_id}"
+        print(f"Downloading {filename}...")
+        gdown.download(url, output_path, quiet=False)
+    else:
+        print(f"{filename} already exists. Skipping.")
+
 
 """ Read file"""
-anime_df = pd.read_csv('../data/anime.csv')
-train_df = pd.read_csv('../data/user_ratings_train.csv')
-test_df = pd.read_csv('../data/user_ratings_test.csv')
-new_users_train_df = pd.read_csv('../data/new_user_ratings_train.csv')
-new_users_test_df = pd.read_csv('../data/new_user_ratings_test.csv')
+anime_df = pd.read_csv('./Data/anime.csv')
+train_df = pd.read_csv('./Data/user_ratings_train.csv')
+test_df = pd.read_csv('./Data/user_ratings_test.csv')
+new_users_train_df = pd.read_csv('./Data/new_user_ratings_train.csv')
+new_users_test_df = pd.read_csv('./Data/new_user_ratings_test.csv')
 
 for user_id in new_users_train_df.user_id.unique():
     num_anime_watched = len(new_users_test_df[new_users_test_df.user_id == user_id])
@@ -47,7 +68,7 @@ def manhattan_distances_metric(user_profile, anime_vector_df):
 
 """ Client Id"""
 def load_client_id(config_path = '../Credentials.yml'):
-    if os.path.exist(config_path):
+    if os.path.exists(config_path):
         with open(config_path,'r') as file:
             config = yaml.safe_load(file)
         return config['api']['client_id']
