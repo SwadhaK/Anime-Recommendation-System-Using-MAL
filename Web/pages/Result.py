@@ -14,14 +14,14 @@ def load_evaluation(path):
 # Load all evaluations
 evaluations = {
     "Normal Users": {
-        "Content-Based Filtering": load_evaluation('../data/cbf_evaluation'),
-        "Collaborative Filtering": load_evaluation('../data/cf_evaluation'),
-        "Hybrid System": load_evaluation('../data/hybrid_evaluation'),
+        "Content-Based Filtering": load_evaluation('../Data/cbf_evaluation'),
+        "Collaborative Filtering": load_evaluation('../Data/cf_evaluation'),
+        "Hybrid System": load_evaluation('../Data/hybrid_evaluation'),
     },
     "New Users": {
-        "Content-Based Filtering": load_evaluation('../data/new_cbf_evaluation'),
-        "Collaborative Filtering": load_evaluation('../data/new_cf_evaluation'),
-        "Hybrid System": load_evaluation('../data/new_hybrid_evaluation'),
+        "Content-Based Filtering": load_evaluation('../Data/new_cbf_evaluation'),
+        "Collaborative Filtering": load_evaluation('../Data/new_cf_evaluation'),
+        "Hybrid System": load_evaluation('../Data/new_hybrid_evaluation'),
     }
 }
 
