@@ -6,7 +6,7 @@ import os
 
 # Load client ID from config
 def load_client_id(config_path = '../Credentials.yml'):
-    if os.path.exist(config_path):
+    if os.path.exists(config_path):
         with open(config_path,'r') as file:
             config = yaml.safe_load(file)
         return config['api']['client_id']
