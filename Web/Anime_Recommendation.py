@@ -24,6 +24,26 @@ st.set_page_config(layout="wide")
 st.markdown("# Get Recommendations For MyAnimeList Accounts")
 st.sidebar.markdown("# Recommendations For MyAnimeList Accounts")
 
+
+os.makedirs("Data", exist_ok=True)
+
+# Replace these with actual file IDs from Drive
+file_map = {
+    "cbf_recommender": "1Hncv-TqPr-IrEYzC1gppfPWS_sXdSgXJ",
+    "collaborative_recommender": "18s2OpjB39TsURcT_K9P9kP2Gi3zyipxB",
+    "hybrid_recommender": "1KmnwKrMhN-enh6s7fiosXzc8mxLfWZUY"
+}
+
+for filename, file_id in file_map.items():
+    output_path = os.path.join("Data", filename)
+    if not os.path.exists(output_path):
+        url = f"https://drive.google.com/uc?id={file_id}"
+        print(f"Downloading {filename}...")
+        gdown.download(url, output_path, quiet=False)
+    else:
+        print(f"{filename} already exists. Skipping.")
+
+
 # Load recommenders
 @st.cache_data
 def load_recommender(file_path):
@@ -31,9 +51,9 @@ def load_recommender(file_path):
         return pickle.load(f)
 
 recommenders = {
-    "Content-Based Filtering Recommender": load_recommender('../data/cbf_recommender'),
-    "Collaborative Filtering Recommender": load_recommender('../data/collaborative_recommender'),
-    "Hybrid Recommender": load_recommender('../data/hybrid_recommender')
+    "Content-Based Filtering Recommender": load_recommender('./Data/cbf_recommender'),
+    "Collaborative Filtering Recommender": load_recommender('./Data/collaborative_recommender'),
+    "Hybrid Recommender": load_recommender('./Data/hybrid_recommender')
 }
 
 # UI container
