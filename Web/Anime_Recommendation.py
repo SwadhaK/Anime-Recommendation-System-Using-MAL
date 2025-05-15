@@ -1,81 +1,80 @@
+import os
 import pickle
 import streamlit as st
 import gdown
 import pandas as pd
 import yaml
-import os
 
+from Recommendation_Systems_Core import *
 
-# Load client ID from config
-def load_client_id(config_path = '../Credentials.yml'):
+# Streamlit setup
+st.set_page_config(layout="wide")
+st.markdown("# Get Recommendations For MyAnimeList Accounts")
+st.sidebar.markdown("# Recommendations For MyAnimeList Accounts")
+
+# Ensure Data directory exists
+os.makedirs("Data", exist_ok=True)
+
+# Load API key if needed (not used here directly but retained)
+def load_client_id(config_path='../Credentials.yml'):
     if os.path.exists(config_path):
-        with open(config_path,'r') as file:
+        with open(config_path, 'r') as file:
             config = yaml.safe_load(file)
         return config['api']['client_id']
     else:
         return os.getenv('CLIENT_ID')
 
-
 client_id = load_client_id()
 
-from Recommendation_Systems_Core import *
-
-st.set_page_config(layout="wide")
-st.markdown("# Get Recommendations For MyAnimeList Accounts")
-st.sidebar.markdown("# Recommendations For MyAnimeList Accounts")
-
-
-os.makedirs("Data", exist_ok=True)
-
-# Replace these with actual file IDs from Drive
-file_map = {
-    "cbf_recommender": "1Hncv-TqPr-IrEYzC1gppfPWS_sXdSgXJ",
-    "collaborative_recommender": "18s2OpjB39TsURcT_K9P9kP2Gi3zyipxB",
-    "hybrid_recommender": "1KmnwKrMhN-enh6s7fiosXzc8mxLfWZUY"
+# Mapping for each recommender model
+recommender_files = {
+    "Content-Based Filtering Recommender": {
+        "id": "1Hncv-TqPr-IrEYzC1gppfPWS_sXdSgXJ",
+        "path": "Data/cbf_recommender"
+    },
+    "Collaborative Filtering Recommender": {
+        "id": "18s2OpjB39TsURcT_K9P9kP2Gi3zyipxB",
+        "path": "Data/collaborative_recommender"
+    },
+    "Hybrid Recommender": {
+        "id": "1KmnwKrMhN-enh6s7fiosXzc8mxLfWZUY",
+        "path": "Data/hybrid_recommender"
+    }
 }
 
-for filename, file_id in file_map.items():
-    output_path = os.path.join("Data", filename)
+# Lazy load model from Drive
+@st.cache_data
+def load_recommender_from_drive(file_id, output_path):
     if not os.path.exists(output_path):
         url = f"https://drive.google.com/uc?id={file_id}"
-        print(f"Downloading {filename}...")
         gdown.download(url, output_path, quiet=False)
-    else:
-        print(f"{filename} already exists. Skipping.")
-
-
-# Load recommenders
-@st.cache_data
-def load_recommender(file_path):
-    with open(file_path, 'rb') as f:
+    with open(output_path, 'rb') as f:
         return pickle.load(f)
 
-recommenders = {
-    "Content-Based Filtering Recommender": load_recommender('./Data/cbf_recommender'),
-    "Collaborative Filtering Recommender": load_recommender('./Data/collaborative_recommender'),
-    "Hybrid Recommender": load_recommender('./Data/hybrid_recommender')
-}
-
-# UI container
+# UI for selection
 container = st.container(border=True)
 recommender_option = container.selectbox(
     "Which recommender would you like to use?",
-    list(recommenders.keys()),
+    list(recommender_files.keys()),
     index=0
 )
-
 username = container.text_input("Enter MyAnimeList Username")
 num_recommendations_input = container.text_input("Enter Number of Recommendations", value="5")
 
+# Validate input
 try:
     n_recommendations = max(1, int(num_recommendations_input))
 except ValueError:
     st.warning("Number of recommendations must be an integer.")
     st.stop()
 
-selected_recommender = recommenders[recommender_option]
+# Load selected recommender model
+recommender_info = recommender_files[recommender_option]
+selected_recommender = load_recommender_from_drive(
+    recommender_info['id'], recommender_info['path']
+)
 
-# Define logic for showing recommendations
+# Recommendation logic
 def display_results(recommender, recommend_fn):
     try:
         user_id = recommender.add_new_user_by_mal_username(username)
@@ -92,7 +91,7 @@ def display_results(recommender, recommend_fn):
     except Exception as e:
         st.error(f"Failed to get recommendations: {e}")
 
-# Recommender-specific logic
+# Individual functions for each recommender type
 def get_cbf_recommendations(r, user_id, n):
     return r.recommend_user(user_id, n)
 
@@ -111,7 +110,7 @@ recommendation_functions = {
     "Hybrid Recommender": get_hybrid_recommendations
 }
 
-# Trigger on button click
+# Button trigger
 if container.button("Get Recommendations", type="primary"):
     display_results(selected_recommender, recommendation_functions[recommender_option])
 
