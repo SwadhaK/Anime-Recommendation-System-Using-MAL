@@ -7,29 +7,6 @@ import gdown
 
 st.set_page_config(layout="wide")
 
-# os.makedirs("Data", exist_ok=True)
-#
-# # Replace these with actual file IDs from Drive
-# file_map = {
-#     "cbf_evaluation": "1FpCb2BOFOMprTpn_Rn0cU1uYspowDf3d",
-#     "cf_evaluation": "1XyAmaRa1gUAWM5J83Jp3tbwYacPTNsBH",
-#     "hybrid_evaluation": "1vmeKjWAxBBL-dGkipZvAv1dsbBNyd0GK",
-#     "new_cbf_evaluation": "1G_QkVe_C29te9EFRP_anK1XtNS4KAl0u",
-#     "new_cf_evaluation": "1mCQWawKrR6Szs0aOnK7-aRvJNFT1nG6M",
-#     "new_hybrid_evaluation": "1zbioAyt4_xqsSqnp8rLWireHxtcBu7cf"
-# }
-
-# for filename, file_id in file_map.items():
-#     output_path = os.path.join("Data", filename)
-#     if not os.path.exists(output_path):
-#         url = f"https://drive.google.com/uc?id={file_id}"
-#         print(f"Downloading {filename}...")
-#         gdown.download(url, output_path, quiet=False)
-#     else:
-#         print(f"{filename} already exists. Skipping.")
-#
-#
-# Load evaluation from file
 @st.cache_data
 def load_evaluation(path):
     with open(path, 'rb') as f:
