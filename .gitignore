@@ -5,4 +5,13 @@ Credentials.yml
 Valid_Json_Creation.py
 .ipynb_checkpoints
 .idea/
-data/
+data/*
+!data/cbf_evaluation
+!data/cf_evaluation
+!data/hybrid_evaluation
+!data/new_cbf_evaluation
+!data/new_cf_evaluation
+!data/new_hybrid_evaluation
+#!data/cbf_recommender
+#!data/collaborative_recommender
+#!data/hybrid_recommender
